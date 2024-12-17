@@ -35,7 +35,6 @@ ENV NODE_ENV=production
 # Expose the port used by the app
 EXPOSE 3000
 
-# Prune the node_modules directory to remove development dependencies and clears the npm cache and removes any temporary files
 
 
 # Start the application
