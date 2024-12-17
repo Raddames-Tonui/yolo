@@ -6,9 +6,8 @@
  3. Mongo : `mongo:6.0 `
        
 
-## 2. Dockerfile Directives for Container Creation and Execution.
-Two Dockerfiles were used: one for the Client and another for the Backend.
-
+## 2. Dockerfile directives used in the creation and running of each container.
+ I used two Dockerfiles. One for the Client and the other one for the Backend.
 
 **Client Dockerfile**
 
@@ -95,7 +94,7 @@ CMD ["npm", "start"]
 ```
 
 ## 3. Docker Compose Networking
-The docker-compose.yml file sets up the network configuration, defining port mappings and container connections to a custom bridge network (yolo-network).
+The (docker-compose.yml) defines the networking configuration for the project. It includes the allocation of application ports. The relevant sections are as follows:
 
 
 ```
