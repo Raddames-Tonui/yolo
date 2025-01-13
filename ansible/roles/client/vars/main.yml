@@ -1,0 +1,4 @@
+---
+container_name: tonui_yolo_client
+network: client-net
+volume: app-mongo-data/app

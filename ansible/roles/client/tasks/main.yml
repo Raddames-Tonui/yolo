@@ -1,0 +1,15 @@
+- name: Pull image from docker repository
+  docker_image:
+    name: tonui/tonui-yolo-frontend:v1.0.0
+    source: pull
+
+- name: Create Node.js Client Container
+  docker_container:
+    name: tonui-yolo-client
+    image: tonui/tonui-yolo-client:v1.0.0
+    networks:
+      - name: client-net
+    ports:
+      - "3000:3000"
+    command: "npm start"
+  become: yes
