@@ -1,0 +1,4 @@
+---
+container_name: tonui-yolo-backend
+network: backend-net
+volume: app-mongo-data/app
