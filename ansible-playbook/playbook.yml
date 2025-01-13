@@ -1,0 +1,8 @@
+---
+- name: Ansible playbook to dockerize and run YOLO e-commerce app using ansible
+  hosts: all
+  become: true
+  roles:
+    - client
+    - mongodb-setup
+    - backend
