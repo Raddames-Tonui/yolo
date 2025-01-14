@@ -16,10 +16,17 @@ Vagrant.configure("2") do |config|
       vb.cpus = 2        # Allocate 2 CPUs
     end
   
+     # Install Ansible (if not already installed in the base box)
+    config.vm.provision "shell", inline: <<-SHELL
+      sudo apt update
+      sudo apt install -y ansible
+    SHELL
+ 
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "ansible/playbook.yaml"
-        ansible.inventory_path = "ansible/inventory"
-  
+      ansible.inventory_path = "ansible/inventory.yaml"
+      ansible.become = true  # Elevate privileges to root (sudo)
+ 
       ansible.verbose = "v"
     end
   

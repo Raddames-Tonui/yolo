@@ -1,18 +1,44 @@
-ansible-playbook/
-├── roles/
-│   ├── setup-mongodb/
-│   │   ├── tasks/
-│   │   │   └── main.yaml
-│   │   └── vars/
-│   │       └── main.yaml
-│   ├── backend-deployment/
-│   │   ├── tasks/
-│   │   │   └── main.yaml
-│   │   └── vars/
-│   │       └── main.yaml
-│   └── frontend-deployment/
-│       ├── tasks/
-│       │   └── main.yaml
-│       └── vars/
-│           └── main.yaml
-└── playbook.yaml
+project/
+├── Vagrantfile
+├── ansible-playbook/
+│   ├── inventory/
+│   │   └── hosts.ini
+│   ├── roles/
+│   │   ├── setup-mongodb/
+│   │   │   ├── tasks/
+│   │   │   │   └── main.yaml
+│   │   │   └── vars/
+│   │   │       └── main.yaml
+│   │   ├── backend-deployment/
+│   │   │   ├── tasks/
+│   │   │   │   └── main.yaml
+│   │   │   └── vars/
+│   │   │       └── main.yaml
+│   │   └── frontend-deployment/
+│   │       ├── tasks/
+│   │       │   └── main.yaml
+│   │       └── vars/
+│   │           └── main.yaml
+│   ├── group_vars/
+│   │   └── all.yaml
+│   └── playbook.yaml
+├── client/
+│   ├── Dockerfile
+│   ├── src/
+│   │   └── (React/Angular/Vue files)
+│   ├── package.json
+│   ├── public/
+│   │   └── index.html
+│   └── .env
+├── backend/
+│   ├── Dockerfile
+│   ├── src/
+│   │   ├── app.js
+│   │   └── routes/
+│   │       └── (API routes)
+│   ├── package.json
+│   ├── .env
+│   └── config/
+│       └── db.js
+├── docker-compose.yaml
+└── README.md
