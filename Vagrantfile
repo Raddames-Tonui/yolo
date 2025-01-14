@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
       ansible.become = true  # Elevate privileges to root (sudo)
  
       ansible.verbose = "v"
+      ansible.limit = "myserver"  # Ensure it limits to myserver
     end
   
     # Share the project directory with the VM for easy access to code

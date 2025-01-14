@@ -3,7 +3,8 @@
   hosts: all
   become: true
   roles:
-    - setup-mongodb       # First, set up the database.
+    - setup-docker        # First, set up docker.
+    - setup-mongodb       # set up the database.
     - backend-deployment  # Then, deploy the backend that needs the database.
     - frontend-deployment 
     

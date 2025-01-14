@@ -1,0 +1,20 @@
+---
+- name: Install Docker
+  apt:
+    name: docker.io
+    state: present
+  become: true
+
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Add vagrant user to the docker group
+  user:
+    name: vagrant
+    group: docker
+    append: yes
+  become: true
