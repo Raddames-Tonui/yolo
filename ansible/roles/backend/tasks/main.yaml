@@ -1,5 +1,5 @@
 ---
-- name: Pull image from docker repository
+- name: Pull image from docker repository 
   docker_image:
     name: tonui/tonui-yolo-backend:v1.0.0
     source: pull
@@ -9,7 +9,7 @@
     name: tonui-yolo-backend
     image: tonui/tonui-yolo-backend:v1.0.0
     networks:
-      - name: backend-net
+      - name: app-net
     ports:
       - "5000:5000"
     command: "npm start"
