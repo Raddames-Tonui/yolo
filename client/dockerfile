@@ -1,41 +1,30 @@
-# Build stage
+# Build Stage
 FROM node:16-alpine3.16 as build-stage
 
-# working directory inside the container
+# Set working directory inside the container
 WORKDIR /client
 
+# Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
 
-# Install dependencies 
+# Install only production dependencies
 RUN npm install --only=production && \
-    npm cache clean --force && \
-    rm -rf /tmp/*
+    npm cache clean --force
 
-# Copy code
+# Copy application source code
 COPY . .
 
-# Build the application 
-RUN npm run build && \
-    npm prune --production
+# Build the application
+RUN npm run build
 
-# Production stage
-FROM node:16-alpine3.16 as production-stage
+# Production Stage
+FROM nginx:1.23-alpine as production-stage
 
-WORKDIR /client
+# Copy the built application from the build stage
+COPY --from=build-stage /client/build /usr/share/nginx/html
 
-# Copy only the necessary files from the build stage
-COPY --from=build-stage /client/build ./build
-COPY --from=build-stage /client/public ./public
-COPY --from=build-stage /client/src ./src
-COPY --from=build-stage /client/package*.json ./
+# Expose the port for nginx
+EXPOSE 80
 
-# Set the environment variable for the app
-ENV NODE_ENV=production
-
-# Expose the port used by the app
-EXPOSE 3000
-
-
-
-# Start the application
-CMD ["npm", "start"]
+# Start nginx server
+CMD ["nginx", "-g", "daemon off;"]

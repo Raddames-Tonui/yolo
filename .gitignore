@@ -1,7 +1,7 @@
 app-mongo-data
 app-mongo-data/
-vars.yml
-vault.yml
+vars.yaml
+vault.yaml
 .vagrant/
 .vscode/
 .vscode
