@@ -1,45 +1,37 @@
-#This file builds the Docker images for a React/NodeJS application and runs it as microservices on Docker containers
-
-#To ensure successful execution, clone this entire repository and execute this file while in the root folder of the cloned repository
-
-#It's also a requirement to have Docker and the docker-compose plugin installed in your environment
-
-#To launch this app without having to clone the entire repository,use the docker-compose.yaml file to run the app
-
 version: "3.8"
 
 services:
-
-  #Builds the frontend Docker image and creates the frontend microservice
-  brian-yolo-client:
-    image: brianbwire/brian-yolo-client:v1.0.0
+  
+  # Build the frontend Docker image and create the frontend microservice
+  tonui-yolo-client:
+    image: tonui/tonui-yolo-client:v1.0.0
     build: ./client
-    container_name: brian-yolo-client
+    container_name: tonui-yolo-client
     stdin_open: true
     tty: true
     ports:
-      - "3000:3000"
-    depends_on: 
-      - brian-yolo-backend
+      - "3000:80"  # Map container port 80(for ngnix) to host port 3000
+    depends_on:
+      - tonui-yolo-backend
     networks:
       - app-net
 
-  #Builds the backend Docker image and creates the backend microservice
-  brian-yolo-backend:
-    image: brianbwire/brian-yolo-backend:v1.0.0
+  # Build the backend Docker image and create the backend microservice
+  tonui-yolo-backend:
+    image: tonui/tonui-yolo-backend:v1.0.0
     build: ./backend
-    container_name: brian-yolo-backend
+    container_name: tonui-yolo-backend
     stdin_open: true
     tty: true
     restart: always
     ports:
       - "5000:5000"
-    depends_on: 
+    depends_on:
       - app-ip-mongo
     networks:
       - app-net
 
-  #Creates the database microservice
+  # Create the database microservice
   app-ip-mongo:
     image: mongo
     container_name: app-mongo
@@ -51,8 +43,8 @@ services:
       - type: volume
         source: app-mongo-data
         target: /data/db
-
-#Creates the network infrastructure necessary for the containers to communicate with each other
+  
+# Create the network infrastructure necessary for the containers to communicate with each other
 networks:
   app-net:
     name: app-net
@@ -60,10 +52,10 @@ networks:
     attachable: true
     ipam:
       config:
-        - subnet: 172.20.0.0/16 
-          ip_range: 172.20.0.0/16 
+        - subnet: 172.20.0.0/16
+          ip_range: 172.20.0.0/16
 
-#Creates a Docker volume that persists all the data stored in the database
+# Create a Docker volume that persists all the data stored in the database
 volumes:
   app-mongo-data:
     driver: local

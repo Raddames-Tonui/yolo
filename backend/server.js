@@ -6,43 +6,53 @@ const upload = multer();
 
 const productRoute = require('./routes/api/productRoute');
 
-// Connecting to the Database
-let mongodb_url = 'mongodb://localhost/';
+// MongoDB connection URI, using Docker service name for MongoDB
+let mongodb_url = 'mongodb://app-ip-mongo/';  // Use the service name 'app-ip-mongo' as the MongoDB host in Docker
 let dbName = 'yolomy';
 
-// define a url to connect to the database
-const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName
-mongoose.connect(MONGODB_URI,{useNewUrlParser: true, useUnifiedTopology: true  } )
-let db = mongoose.connection;
+// MongoDB URI with environment variable fallback
+const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName;
 
-// Check Connection
-db.once('open', ()=>{
-    console.log('Database connected successfully')
-})
+// Connect to MongoDB with retry logic in case of failure
+const connectWithRetry = () => {
+    mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+        .then(() => {
+            console.log('Database connected successfully');
+        })
+        .catch((error) => {
+            console.error('Failed to connect to MongoDB, retrying...', error);
+            setTimeout(connectWithRetry, 5000);  // Retry after 5 seconds if connection fails
+        });
+};
+
+// Start the connection attempt
+connectWithRetry();
+
+const db = mongoose.connection;
 
 // Check for DB Errors
-db.on('error', (error)=>{
+db.on('error', (error) => {
     console.log(error);
-})
+});
 
 // Initializing express
-const app = express()
+const app = express();
 
 // Body parser middleware
-app.use(express.json())
+app.use(express.json());
 
-// 
-app.use(upload.array()); 
+// Multer setup for file uploads
+app.use(upload.array());
 
-// Cors 
+// CORS setup
 app.use(cors());
 
-// Use Route
-app.use('/api/products', productRoute)
+// Use Route for product API
+app.use('/api/products', productRoute);
 
 // Define the PORT
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, ()=>{
-    console.log(`Server listening on port ${PORT}`)
-})
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
