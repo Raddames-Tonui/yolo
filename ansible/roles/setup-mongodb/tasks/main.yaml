@@ -6,7 +6,7 @@
     ports:
       - '27017:27017'
     volumes:
-      - ./app-mongo-data:/data/db
+      - app-mongo-data:/data/db  
     networks:
       - name: app-net
   tags:

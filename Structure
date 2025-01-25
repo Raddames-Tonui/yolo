@@ -1,8 +1,8 @@
 project/
 ├── Vagrantfile
-├── ansible-playbook/
-│   ├── inventory/
-│   │   └── hosts.ini
+├── ansible/
+│   ├── inventory.yaml
+│   │   
 │   ├── roles/
 │   │   ├── setup-mongodb/
 │   │   │   ├── tasks/
@@ -19,13 +19,11 @@ project/
 │   │       │   └── main.yaml
 │   │       └── vars/
 │   │           └── main.yaml
-│   ├── group_vars/
-│   │   └── all.yaml
 │   └── playbook.yaml
 ├── client/
 │   ├── Dockerfile
 │   ├── src/
-│   │   └── (React/Angular/Vue files)
+│   │   └── (React)
 │   ├── package.json
 │   ├── public/
 │   │   └── index.html

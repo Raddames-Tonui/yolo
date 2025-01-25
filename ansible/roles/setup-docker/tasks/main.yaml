@@ -15,6 +15,6 @@
 - name: Add vagrant user to the docker group
   user:
     name: vagrant
-    group: docker
+    groups: docker
     append: yes
   become: true

@@ -2,9 +2,50 @@
 - name: Ansible playbook to dockerize and run yolo e-commerce app using ansible
   hosts: all
   become: true
+
   roles:
     - setup-docker        # First, set up docker.
-    - setup-mongodb       # set up the database.
-    - backend-deployment  # Then, deploy the backend that needs the database.
-    - frontend-deployment 
-    
+    - setup-mongodb       # Set up the database with volumes.
+    - backend-deployment  # Deploy the backend that needs the database.
+    - frontend-deployment # Deploy the frontend.
+
+  tasks:
+    # Create Docker network for containers 
+    - name: Create app-net network for containers
+      docker_network:
+        name: app-net
+        state: present
+        driver: bridge
+        attachable: true
+        ipam_config:
+          - subnet: 172.20.0.0/16
+            iprange: 172.20.0.0/16  # Corrected here (used iprange instead of ip_range)
+
+    # Create Docker volume for MongoDB data persistence
+    - name: Create Docker volume for MongoDB data persistence
+      docker_volume:
+        name: app-mongo-data
+        state: present
+
+    # Wait for Docker to be fully initialized and the network to be available
+    - name: Wait for Docker network to be available
+      command: docker network inspect app-net
+      retries: 5
+      delay: 5
+      become: true
+      failed_when: false
+      register: network_status
+
+    # Start the MongoDB container with volume and network
+    - name: Run MongoDB container with volume
+      docker_container:
+        name: app-mongo
+        image: mongo
+        state: started
+        published_ports:
+          - "27017:27017"
+        volumes:
+          - app-mongo-data:/data/db
+        networks:
+          - app-net
+      become: true

@@ -1,0 +1,62 @@
+# Deployment for the Yolo backend application
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-backend-deployment  
+  labels:
+    app: yolo-backend 
+  annotations:
+    description: Deployment for Yolo backend application
+spec:
+  replicas: 3  # Number of pod replicas for scalability and availability
+  selector:
+    matchLabels:
+      app: yolo-backend  # Matches pods with this label
+  template:
+    metadata:
+      labels:
+        app: yolo-backend  # Label applied to pods created by this deployment
+    spec:
+      containers:
+      - name: yolo-backend-container 
+        image: tonui/tonui-yolo-backend:v1.0.0 
+        command: ["npm", "start"] 
+        resources:
+          limits:
+            memory: "256Mi" 
+            cpu: "500m" 
+          requests:
+            memory: "128Mi"  # Guaranteed memory allocated for the container
+            cpu: "250m"  # Guaranteed CPU allocated for the container
+        ports:
+        - containerPort: 5000 
+        readinessProbe:  # Check to determine if the application is ready to handle traffic
+          httpGet:
+            path: /  # Path to check readiness
+            port: 5000  # Port to send the readiness probe
+          initialDelaySeconds: 10  # Delay before checking readiness for the first time
+          periodSeconds: 5  # Frequency of readiness checks
+        livenessProbe:  # Check to ensure the application is alive
+          httpGet:
+            path: /  # Path to check liveness
+            port: 5000  # Port to send the liveness probe
+          initialDelaySeconds: 15  # Delay before the first liveness check
+          periodSeconds: 20  # Frequency of liveness checks
+
+---
+# Service to expose the Yolo backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-backend-service 
+  labels:
+    app: yolo-backend 
+spec:
+  type: LoadBalancer  # Exposes the service to the internet using a cloud provider's load balancer
+  selector:
+    app: yolo-backend  # Matches pods with this label
+  ports:
+  - port: 5000  
+    targetPort: 5000  # Port on the container that the service routes traffic to
+    protocol: TCP  
+  externalTrafficPolicy: Local  # Ensures source IPs are preserved for requests
