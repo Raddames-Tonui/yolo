@@ -1,0 +1,45 @@
+# Deployment for the Yolo client application
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-client-deployment
+  labels:
+    app: yolo-client
+spec:
+  replicas: 3  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: yolo-client
+  template:
+    metadata:
+      labels:
+        app: yolo-client
+    spec:
+      containers:
+      - name: yolo-client-container
+        image: tonui/tonui-yolo-client:v1.0.0  
+        resources:
+          limits:
+            memory: "256Mi"  # Max memory limit
+            cpu: "500m"  # Max CPU limit
+          requests:
+            memory: "128Mi"  # Guaranteed memory
+            cpu: "250m"  # Guaranteed CPU
+        ports:
+        - containerPort: 80  # The container runs on port 80 as per the Nginx setup
+
+---
+# Service to expose the Yolo client
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-client-service 
+  labels:
+    app: yolo-client
+spec:
+  type: LoadBalancer  # Expose the service publicly
+  selector:
+    app: yolo-client  # Match pods with this label
+  ports:
+  - port: 80  # External port exposed by the service
+    targetPort: 80  # Port inside the container where Nginx is running
