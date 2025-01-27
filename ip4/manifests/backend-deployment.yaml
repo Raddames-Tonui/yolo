@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: yolo-backend-container 
-        image: tonui/tonui-yolo-backend:v1.0.0 
+        image: gcr.io/yolo-449108/tonui-yolo-backend:v1.0.0  
         command: ["npm", "start"] 
         resources:
           limits:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: yolo-client-container
-        image: tonui/tonui-yolo-client:v1.0.0  
+        image: gcr.io/yolo-449108/tonui-yolo-client:v1.0.0 
         resources:
           limits:
             memory: "256Mi"  # Max memory limit

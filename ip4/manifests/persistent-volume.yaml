@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: yolo-pv
+spec:
+  capacity:
+    storage: 1Gi  # Define the size of the volume
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce  # Ensure the volume can be mounted by only one pod at a time
+  persistentVolumeReclaimPolicy: Retain  # Keeps the disk even if the PVC is deleted
+  storageClassName: standard  # Standard storage class
+  gcePersistentDisk:
+    pdName: yolo-pv-disk  # Name of the GCE Persistent Disk
+    fsType: ext4  # Filesystem type
