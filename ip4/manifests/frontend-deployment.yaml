@@ -1,4 +1,3 @@
-# Deployment for the Yolo client application
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,19 +26,3 @@ spec:
             cpu: "250m"  # Guaranteed CPU
         ports:
         - containerPort: 80  # The container runs on port 80 as per the Nginx setup
-
----
-# Service to expose the Yolo client
-apiVersion: v1
-kind: Service
-metadata:
-  name: yolo-client-service 
-  labels:
-    app: yolo-client
-spec:
-  type: LoadBalancer  # Expose the service publicly
-  selector:
-    app: yolo-client  # Match pods with this label
-  ports:
-  - port: 80  # External port exposed by the service
-    targetPort: 80  # Port inside the container where Nginx is running

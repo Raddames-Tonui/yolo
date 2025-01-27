@@ -1,4 +1,3 @@
-# Deployment for the Yolo backend application
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,6 +29,9 @@ spec:
             cpu: "250m"  # Guaranteed CPU allocated for the container
         ports:
         - containerPort: 5000 
+        volumeMounts:
+        - name: yolo-storage
+          mountPath: /app/storage  # Adjust path based on your application’s storage path
         readinessProbe:  # Check to determine if the application is ready to handle traffic
           httpGet:
             path: /  # Path to check readiness
@@ -44,19 +46,15 @@ spec:
           periodSeconds: 20  # Frequency of liveness checks
 
 ---
-# Service to expose the Yolo backend
+# PersistentVolumeClaim for storage
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: yolo-backend-service 
-  labels:
-    app: yolo-backend 
+  name: yolo-backend-storage-claim
 spec:
-  type: LoadBalancer  # Exposes the service to the internet using a cloud provider's load balancer
-  selector:
-    app: yolo-backend  # Matches pods with this label
-  ports:
-  - port: 5000  
-    targetPort: 5000  # Port on the container that the service routes traffic to
-    protocol: TCP  
-  externalTrafficPolicy: Local  # Ensures source IPs are preserved for requests
+  accessModes:
+    - ReadWriteOnce  # Allows the volume to be mounted as read-write by a single node
+  resources:
+    requests:
+      storage: 1Gi  # Adjust the storage size as needed
+  storageClassName: standard  # Ensure this matches your storage class (can be left out for default)
